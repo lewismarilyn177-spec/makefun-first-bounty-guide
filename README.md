@@ -159,11 +159,11 @@ If refused, the output shows every failed check with its fix. Address each one, 
 
 ## Claiming Prizes
 
-Winners are announced after the deadline. If you placed in the top 50:
+After the deadline, final checks and re-checks run and the leaderboard publishes. If you placed in the top 50, you must claim your prize within 7 days:
 
-1. USDC is sent automatically to the Solana wallet tied to your keypair
-2. No claim transaction needed — it arrives in your wallet
-3. Check the leaderboard for final rankings
+1. Provide a Solana address for payout and sign the winner agreement
+2. USDC on Solana is sent from make.fun's escrow/reward wallet to that address
+3. Check the leaderboard for final rankings and claim instructions
 
 ---
 
