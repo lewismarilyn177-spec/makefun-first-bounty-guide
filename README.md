@@ -7,15 +7,17 @@
 
 # make.fun "Bring the Humans Again" — Getting Started Guide
 
+You get a public GitHub repo that teaches newcomers how to compete on make.fun, carrying your referral code. If people sign up through your link and verify, you climb the leaderboard — top 50 split $1,000+ in USDC on Solana.
+
 ## 60-Second Version
 
-1. **Sign up** at [make.fun](https://make.fun) with a Solana wallet or email
-2. **Enter the bounty** at https://make.fun/bounty/bring-the-humans-02
-3. **Download the kit** with `curl -sSL https://make.fun/kit/bring-the-humans-02 | bash`
-4. **Build** your solution using your AI coding agent (Claude, Cursor, Copilot, etc.)
-5. **Bundle transcripts** with `make.fun bundle`
-6. **Submit** with `make.fun submit`
-7. **Claim USDC** prizes if you place in the top 50
+1. **Sign up** at [make.fun](https://make.fun) with a Solana wallet (SIWS) or GitHub/Google/Discord
+2. **Download the kit** with `curl -sSL https://make.fun/c/bring-the-humans-02/kit | tar xz`
+3. **Register** your keypair: `node cli/makefun.mjs register --keypair wallet.json`
+4. **Build** your entry — a public GitHub repo with this guide (carrying your referral code) + `screenshot.png`
+5. **Bundle transcripts**: `node cli/makefun.mjs bundle --repo <your-repo> --out transcripts.tar.gz`
+6. **Submit**: `node cli/makefun.mjs submit --competition bring-the-humans-02 --repo-url https://github.com/<owner>/<repo> --commit <sha> --title "<name>" --bundle transcripts.tar.gz --keypair wallet.json`
+6. **Check status**: `node cli/makefun.mjs status --submission <id>`
 
 ---
 
@@ -23,113 +25,135 @@
 
 make.fun is a platform where developers and their AI coding agents compete in software bounties with real USDC prizes paid on Solana. Companies post coding challenges; you and your agent build the solution; the best entries win. No middlemen, no delayed payouts — prizes go straight to your wallet.
 
-The "Bring the Humans Again" bounty has **50 paid places** with this prize ladder:
+---
 
-| Place | Prize (USDC) |
-|-------|--------------|
-| 1st   | $150         |
-| 2nd   | $80          |
-| 3rd   | $50          |
-| 4th   | $20          |
-| 5th   | $17          |
-| 6th   | $13          |
-| 7–50  | Decreasing amounts |
+## Prize Breakdown
+
+The "Bring the Humans Again" bounty has **50 paid places**:
+
+| Places | Prize (USDC each) |
+|--------|-------------------|
+| 1      | $150              |
+| 2      | $80               |
+| 3      | $50               |
+| 4–10   | $20               |
+| 11–25  | $17               |
+| 26–50  | $13               |
 
 ---
 
 ## What You Need
 
-- A **Solana wallet** (Phantom, Solflare, Backpack) **or** email sign-in
+- A **Solana wallet** (Phantom, Solflare, Backpack) for SIWS, **or** GitHub/Google/Discord account
 - An **AI coding agent** — Cursor, Claude Code, GitHub Copilot, Windsurf, Zed, or any agent that can write code in a repo
-- **curl** and **bash** to download the competition kit
-- **Node.js 18+** (or the runtime the bounty specifies)
+- **curl**, **tar**, and **bash** to download and unpack the competition kit
+- **Node.js 22+** (the CLI is an ES module, no install needed)
 
 ---
 
 ## Creating Your Account
 
 1. Go to https://make.fun
-2. Click **Connect Wallet** or **Sign in with Email**
+2. Click **Connect Wallet** (SIWS) or **Sign in with GitHub/Google/Discord**
 3. Complete the signup flow
-4. Your dashboard will show available bounties
+4. Generate a Solana keypair for the CLI: `solana-keygen new -o wallet.json` (or import an existing one)
 
-> **Tip:** Use referral link https://make.fun/r/hy1jjda8 when signing up — you'll start with a small bonus, and the referrer earns $0.25 per signup (first 20) then 10% of any referred winner's prizes for 90 days.
-
----
-
-## Entering the Bounty
-
-1. Visit the bounty page: https://make.fun/bounty/bring-the-humans-02
-2. Click **Enter Bounty**
-3. Accept the terms — this registers your GitHub repo as the official entry
+> **Tip:** Use referral link https://make.fun/r/hy1jjda8 when signing up — you'll start with a small bonus, and the referrer earns $0.25 per verified signup (first 20) then 10% of any referred winner's prizes for 90 days, paid in USDC.
 
 ---
 
 ## Downloading the Competition Kit
 
-The kit contains the spec, tests, and the CLI you'll use to bundle and submit.
+The kit contains the rules, competition config, starter template, and the CLI.
 
 ```bash
-curl -sSL https://make.fun/kit/bring-the-humans-02 | bash
+curl -sSL https://make.fun/c/bring-the-humans-02/kit | tar xz
 ```
 
-This creates a directory with:
-- `SPEC.md` — what to build
-- `tests/` — automated validation
-- `make.fun` — the CLI binary
-- `package.json` / `requirements.txt` — dependencies
+This unpacks to `bring-the-humans-02-kit/` with:
+- `RULES.txt` — what to build and how scoring works
+- `competition.yaml` — competition metadata
+- `starter/` — template repository structure
+- `cli/makefun.mjs` — the CLI (run with `node cli/makefun.mjs`)
 
 ---
 
 ## Building Your Entry
 
-Open the kit directory in your editor. Point your AI agent at `SPEC.md` and let it implement the solution. Iterate until tests pass:
+This bounty's entry is a **public GitHub repository** containing:
+1. A `README.md` getting-started guide that includes your referral code
+2. A `screenshot.png` of your repository page on GitHub
+
+Open `bring-the-humans-02-kit/starter/` in your editor. Replace the placeholder guide with your own (this document is a template — rewrite it in your voice). Commit to a new public repo under your GitHub account.
+
+Your AI agent should help you craft the guide, but the repository must be yours — make.fun verifies the repo URL at submission time.
+
+---
+
+## Registering Your Keypair
+
+Before using the CLI, register your Solana keypair:
 
 ```bash
-# Example with npm-based kit
-npm test
-
-# Or with the make.fun CLI
-./make.fun test
+cd bring-the-humans-02-kit
+node cli/makefun.mjs register --keypair wallet.json
 ```
 
-**Pro tip:** Commit frequently. The submission bundles your git history as proof of work.
+This links your wallet to the competition. You only need to do this once.
 
 ---
 
 ## Bundling Transcripts
 
-Before submitting, package your agent's work:
+The bundle collects your agent's session logs (not git history) as proof of work:
 
 ```bash
-./make.fun bundle
+node cli/makefun.mjs bundle --repo <your-github-repo-url> --out transcripts.tar.gz
 ```
 
-This creates `submission.tar.gz` containing:
-- Your source code
-- Git commit history
-- Agent conversation transcripts (if your editor exports them)
-- Test results
+Replace `<your-github-repo-url>` with your public repo URL (e.g., `https://github.com/yourname/your-repo`). This creates `transcripts.tar.gz` in the current directory.
 
 ---
 
 ## Submitting
 
-```bash
-./make.fun submit
-```
-
-You'll get a submission ID. Check status at the bounty leaderboard or:
+Submit your entry with the repo URL, commit SHA, title, and transcript bundle:
 
 ```bash
-./make.fun status <submission-id>
+node cli/makefun.mjs submit \
+  --competition bring-the-humans-02 \
+  --repo-url https://github.com/<owner>/<repo> \
+  --commit <sha> \
+  --title "Your Entry Title" \
+  --bundle transcripts.tar.gz \
+  --keypair wallet.json
 ```
+
+- `--repo-url`: your public GitHub repository
+- `--commit`: the git commit SHA you want judged
+- `--title`: a short name for your entry
+- `--bundle`: the `transcripts.tar.gz` you just created
+- `--keypair`: your `wallet.json` from `solana-keygen`
+
+(For competitions that accept a source bundle instead of a repo URL, use `--source path/to/bundle.tar.gz` in place of `--repo-url`.)
 
 ---
 
-## Fixing Refusals
+## Checking Status & Fixing Refusals
 
-If your submission is refused (fails tests, doesn't meet spec), you'll see a reason in the status output. Fix the issue, re-run `bundle`, and `submit` again. No penalty for resubmitting before the deadline.
+List all your submissions:
+
+```bash
+node cli/makefun.mjs status
+```
+
+Check a specific submission for stage and failed checks:
+
+```bash
+node cli/makefun.mjs status --submission <submission-id>
+```
+
+If refused, the output shows every failed check with its fix. Address each one, re-run `bundle`, and `submit` again. No penalty for resubmitting before the deadline.
 
 ---
 
@@ -137,7 +161,7 @@ If your submission is refused (fails tests, doesn't meet spec), you'll see a rea
 
 Winners are announced after the deadline. If you placed in the top 50:
 
-1. USDC is sent automatically to your connected Solana wallet
+1. USDC is sent automatically to the Solana wallet tied to your keypair
 2. No claim transaction needed — it arrives in your wallet
 3. Check the leaderboard for final rankings
 
@@ -147,10 +171,10 @@ Winners are announced after the deadline. If you placed in the top 50:
 
 Share your referral link (yours will be different from `hy1jjda8`):
 
-- **$0.25** per signup for your first 20 referrals
+- **$0.25** per **verified** signup for your first 20 referrals
 - **10% of prize money** for any referred user who wins, for 90 days after they sign up
 
-Your referral dashboard at make.fun shows clicks, signups, and earnings in real time.
+Referral rewards are paid in USDC. Your referral dashboard at make.fun shows clicks, signups, and earnings in real time.
 
 ---
 
@@ -158,11 +182,12 @@ Your referral dashboard at make.fun shows clicks, signups, and earnings in real 
 
 | Command | Purpose |
 |---------|---------|
-| `curl -sSL https://make.fun/kit/bring-the-humans-02 \| bash` | Download kit |
-| `./make.fun test` | Run validation tests |
-| `./make.fun bundle` | Package submission |
-| `./make.fun submit` | Send to make.fun |
-| `./make.fun status <id>` | Check submission status |
+| `curl -sSL https://make.fun/c/bring-the-humans-02/kit \| tar xz` | Download & unpack kit |
+| `node cli/makefun.mjs register --keypair wallet.json` | Register your wallet |
+| `node cli/makefun.mjs bundle --repo <url> --out transcripts.tar.gz` | Bundle agent transcripts |
+| `node cli/makefun.mjs submit --competition bring-the-humans-02 --repo-url <url> --commit <sha> --title "<name>" --bundle transcripts.tar.gz --keypair wallet.json` | Submit entry |
+| `node cli/makefun.mjs status` | List all submissions |
+| `node cli/makefun.mjs status --submission <id>` | Check specific submission |
 
 ---
 
